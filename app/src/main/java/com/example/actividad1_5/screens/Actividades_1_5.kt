@@ -31,7 +31,6 @@ Actividad 1:
 Hacer que el texto del botón muestre "Cargar perfil", pero cambie a "Cancelar"
 cuando se muestre la línea de progreso... Cuando pulsemos "Cancelar" vuelve al texto por defecto.
 */
-@Preview(showBackground = true)
 @Composable
 fun Actividad1() {
     var showLoading by rememberSaveable { mutableStateOf(false) }
@@ -75,7 +74,47 @@ Modifica ahora también que se separe el botón de la línea de progreso 30 dp,
 pero usando un estado... es decir, cuando no sea visible no quiero que tenga la separación
 aunque no se vea.
 */
+@Preview(showBackground = true)
+@Composable
+fun Actividad2() {
+    var showLoading by rememberSaveable { mutableStateOf(false) }
+    var txtButton by rememberSaveable{ mutableStateOf("Cargar Perfil") }
+    var padding by rememberSaveable { mutableStateOf(0) }
 
+    Column(
+        Modifier
+            .padding(24.dp)
+            .fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        if (showLoading) {
+            padding = 30
+            txtButton ="Cancelar"
+            CircularProgressIndicator(
+                color = Color.Red,
+                strokeWidth = 10.dp
+            )
+
+            LinearProgressIndicator(
+                modifier = Modifier.padding(top = padding.dp),
+                color = Color.Red,
+                trackColor = Color.LightGray
+            )
+
+        }else{
+            txtButton = "Cargar Perfil"
+        }
+
+        Button(
+            onClick = { showLoading = !showLoading }
+        ) {
+            padding = 0
+            Text(text = txtButton)
+        }
+    }
+}
 
 /*
 Actividad 3:
