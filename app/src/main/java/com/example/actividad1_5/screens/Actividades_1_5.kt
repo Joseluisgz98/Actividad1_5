@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +24,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
@@ -74,7 +76,7 @@ Modifica ahora también que se separe el botón de la línea de progreso 30 dp,
 pero usando un estado... es decir, cuando no sea visible no quiero que tenga la separación
 aunque no se vea.
 */
-@Preview(showBackground = true)
+
 @Composable
 fun Actividad2() {
     var showLoading by rememberSaveable { mutableStateOf(false) }
@@ -123,20 +125,36 @@ Actividad 3:
   cuando se pulse el botón Decrementar.
 - Evitar que nos pasemos de los márgenes de su propiedad progressStatus (0-1)
 */
+
 @Composable
 fun Actividad3() {
+    var progressStatus by rememberSaveable { mutableStateOf(0f) }
+
     Column(
-        Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        LinearProgressIndicator(progress = 0f)
+        LinearProgressIndicator(progress = progressStatus, modifier = Modifier.padding(bottom = 15.dp))
 
-        Row(Modifier.fillMaxWidth()) {
-            Button(onClick = { /* TODO */ }) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Button(onClick = {
+                if (progressStatus < 1.0f) {
+                    progressStatus += 0.1f
+                }
+            }) {
                 Text(text = "Incrementar")
             }
-            Button(onClick = { /* TODO */ }) {
+
+            Button(onClick = {
+                if (progressStatus > 0.0f) {
+                    progressStatus -= 0.1f
+                }
+            }) {
                 Text(text = "Reducir")
             }
         }
@@ -148,7 +166,7 @@ fun Actividad3() {
 Actividad 4:
 Sitúa el TextField en el centro de la pantalla y haz que reemplace el valor de una coma por un punto
 y que no deje escribir más de un punto decimal...
-*/
+*/@Preview(showBackground = true)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Actividad4() {
@@ -156,8 +174,20 @@ fun Actividad4() {
 
     TextField(
         value = myVal,
-        onValueChange = { myVal = it },
-        label = { Text(text = "Importe") }
+        onValueChange = {
+            // Reemplazar la coma por un punto
+            val newValue = it.replace(',', '.')
+
+            // No permitir más de un punto decimal
+            if (!newValue.contains("..")) {
+                myVal = newValue
+            }
+        },
+        label = { Text(text = "Importe") },
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
     )
 }
 
