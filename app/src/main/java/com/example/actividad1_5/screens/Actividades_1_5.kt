@@ -187,6 +187,7 @@ fun Actividad4() {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
+        //para que solo pueda poner numeros
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number)
     )
 }
